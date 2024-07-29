@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_back_card"
+        android:drawable="@drawable/back_card"
+        android:gravity="center"
+        android:width="250dp"
+        android:height="380dp"/>
+
+</layer-list>

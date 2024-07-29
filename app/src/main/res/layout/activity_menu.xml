@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/final_background"
+    android:gravity="center"
+    tools:context=".MenuActivity">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/menu_IMG_doraBoots"
+        android:layout_width="wrap_content"
+        android:layout_height="215dp"
+        app:srcCompat="@drawable/ic_logo_background"
+        android:layout_marginBottom="250dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/onePlayer_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:backgroundTint="@color/gold"
+        android:fontFamily="@font/new_rocket"
+        android:shadowColor="@color/black"
+        android:shadowDx="2.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:text="1 PLAYER"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_gravity="center" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/twoPlayer_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowDx="2.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:textAllCaps="true"
+        android:shadowColor="@color/black"
+        android:text="2 PLAYER"
+        android:fontFamily="@font/new_rocket"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/gold"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/profile_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowDx="2.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:textAllCaps="true"
+        android:shadowColor="@color/black"
+        android:text="PROFILE"
+        android:fontFamily="@font/new_rocket"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/gold"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/shop_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowDx="2.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:textAllCaps="true"
+        android:shadowColor="@color/black"
+        android:text="SHOP"
+        android:fontFamily="@font/new_rocket"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/gold"/>
+
+</LinearLayout>
