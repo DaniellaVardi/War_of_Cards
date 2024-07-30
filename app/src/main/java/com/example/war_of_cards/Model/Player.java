@@ -7,15 +7,15 @@ public class Player {
     private String name;
     private String phoneNumber;
     private int coins;
-    private List<Card> cards;
-    private List<Card> selectedCards;
+    private ArrayList<Card> cards;
+    private ArrayList<Card> selectedCards;
 
     public Player(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.coins = 0;
-        this.cards = new ArrayList<>();
-        this.selectedCards = new ArrayList<>();
+        this.cards = new ArrayList<Card>();
+        this.selectedCards = new ArrayList<Card>();
     }
 
     public Player() {
@@ -52,7 +52,7 @@ public class Player {
         return cards;
     }
 
-    public Player setCards(List<Card> cards) {
+    public Player setCards(ArrayList<Card> cards) {
         this.cards = cards;
         return this;
     }
@@ -61,7 +61,7 @@ public class Player {
         return selectedCards;
     }
 
-    public Player setSelectedCards(List<Card> selectedCards) {
+    public Player setSelectedCards(ArrayList<Card> selectedCards) {
         this.selectedCards = selectedCards;
         return this;
     }
@@ -83,6 +83,16 @@ public class Player {
         this.selectedCards.add(card);
     }
 
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "coins=" + coins +
+                ", cards=" + cards +
+                ", selectedCards=" + selectedCards +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
 
 

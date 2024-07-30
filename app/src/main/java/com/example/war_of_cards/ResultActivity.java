@@ -36,7 +36,7 @@ public class ResultActivity extends AppCompatActivity {
         });
 
         mainMenuButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ResultActivity.this, MainActivity.class);
+            Intent intent = new Intent(ResultActivity.this, MenuActivity.class);
             startActivity(intent);
         });
     }

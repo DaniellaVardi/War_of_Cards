@@ -1,6 +1,10 @@
 package com.example.war_of_cards.Model;
 
-import java.util.List;
+import com.example.war_of_cards.R;
+
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class Game {
 
@@ -9,45 +13,66 @@ public class Game {
     private int player1Score;
     private int player2Score;
 
-    public Game(Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+    public Game() {
+        this.player1 = new Player("Daniel","0543550597");
+        this.player2 = new Player("AI","0543550597");
+
+
+        this.player1.addCard(new Card("Phoenix", 10000, 10000, R.drawable.ic_card_10000));
+        this.player1.addCard(new Card("Knight", 4000, 4000, R.drawable.ic_card_4000));
+        this.player1.addCard(new Card("Knight", 6000, 6000, R.drawable.ic_card_6000));
+
+        initAiCards();
+
+        this.player1.getSelectedCards().add(player1.getCards().get(0));
+        this.player1.getSelectedCards().add(player1.getCards().get(1));
+        this.player1.getSelectedCards().add(player1.getCards().get(2));
+
+        this.player2.getSelectedCards().add(player1.getCards().get(0));
+        this.player2.getSelectedCards().add(player1.getCards().get(1));
+        this.player2.getSelectedCards().add(player1.getCards().get(2));
+
         this.player1Score = 0;
         this.player2Score = 0;
     }
 
-    public void startGame(List<Card> player1Cards, List<Card> player2Cards) {
-        for (int i = 0; i < 3; i++) {
-            Card player1Card = player1Cards.get(i);
-            Card player2Card = player2Cards.get(i);
-            playRound(player1Card, player2Card);
-        }
+    private void initAiCards(){
+        int x = 0;
+        Set<Integer> set = new HashSet<>();
+        Random random = new Random();
+        do {
+            int temp = random.nextInt(Deck.DECK.length);
+            if (set.contains(temp)) continue;
 
-        // Game over, determine the winner
-        if (player1Score > player2Score) {
-            System.out.println("Player 1 wins the game!");
-        } else if (player2Score > player1Score) {
-            System.out.println("Player 2 wins the game!");
-        } else {
-            System.out.println("The game is a draw!");
-        }
+            set.add(temp);
+            x++;
+
+            player2.addCard(Deck.DECK[temp]);
+
+        } while (x < 3);
     }
 
-    private void playRound(Card player1Card, Card player2Card) {
-        System.out.println("Player 1 plays: " + player1Card.getName() + " (Value: " + player1Card.getValue() + ")");
-        System.out.println("Player 2 plays: " + player2Card.getName() + " (Value: " + player2Card.getValue() + ")");
+    public Card playRound(int chosenCard) {
+        Random random = new Random();
 
-        if (player1Card.getValue() > player2Card.getValue()) {
+        if (player2.getSelectedCards().isEmpty()) return null;
+        if (player1.getSelectedCards().isEmpty()) return null;
+
+        Card card1 = player1.getSelectedCards().get(chosenCard);
+//        Card card2 = player2.getSelectedCards().get(player2.getSelectedCards().size()-1);
+        int randomIndex = random.nextInt(player2.getCards().size());
+        Card card2 = player2.getCards().get(randomIndex);
+
+        if(card1.getValue() > card2.getValue())
             player1Score += 1000;
-            System.out.println("Player 1 wins this round!");
-        } else if (player2Card.getValue() > player1Card.getValue()) {
+        else if (card1.getValue() < card2.getValue())
             player2Score += 1000;
-            System.out.println("Player 2 wins this round!");
-        } else {
-            System.out.println("This round is a draw!");
-        }
+        else
+            System.out.println("The game is a draw!");
 
-        System.out.println("Current score - Player 1: " + player1Score + ", Player 2: " + player2Score);
+        player2.getSelectedCards().remove(card2);
+
+        return card2;
     }
 
     public int getPlayer1Score() {
@@ -57,4 +82,24 @@ public class Game {
     public int getPlayer2Score() {
         return player2Score;
     }
+
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "player1=" + player1 +
+                ", player2=" + player2 +
+                ", player1Score=" + player1Score +
+                ", player2Score=" + player2Score +
+                '}';
+    }
+
 }

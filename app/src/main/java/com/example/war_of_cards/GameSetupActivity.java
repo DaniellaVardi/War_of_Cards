@@ -37,9 +37,9 @@ public class GameSetupActivity extends AppCompatActivity {
         cardList = new ArrayList<>();
         selectedCards = new ArrayList<>();
         // Add your cards to the list with their image resources
-        // cardList.add(new Card("Phoenix", 10000, 10000, R.drawable.ic_card_10000));
-        // cardList.add(new Card("Knight", 4000, 4000, R.drawable.ic_card_4000));
-        // cardList.add(new Card("Knight", 6000, 6000, R.drawable.ic_card_6000));
+//         cardList.add(new Card("Phoenix", 10000, 10000, R.drawable.ic_card_10000));
+//         cardList.add(new Card("Knight", 4000, 4000, R.drawable.ic_card_4000));
+//         cardList.add(new Card("Knight", 6000, 6000, R.drawable.ic_card_6000));
 
         cardSelectionAdapter = new CardSelectionAdapter(this, cardList, selectedCards);
         recyclerViewCards.setAdapter(cardSelectionAdapter);
