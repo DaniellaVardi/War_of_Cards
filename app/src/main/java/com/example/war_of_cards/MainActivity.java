@@ -1,5 +1,6 @@
 package com.example.war_of_cards;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         main_BTN_endTurn.setOnClickListener(v -> endTurn());
     }
 
+    @SuppressLint("ResourceAsColor")
     private void cardClick(int cardPlace) {
         if (isChosen) return;
 
@@ -108,11 +110,12 @@ public class MainActivity extends AppCompatActivity {
             if (boolImage[i]) {
                 deckFrame[i].setBackgroundColor(Color.GREEN);
             } else {
-                deckFrame[i].setBackgroundColor(Color.BLACK);
+                deckFrame[i].setBackgroundColor(R.color.gold);
             }
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void playRound() {
         if (!isChosen) {
             if (chosenCard == -1) {
@@ -125,9 +128,10 @@ public class MainActivity extends AppCompatActivity {
             main_BTN_makeTurn.setVisibility(View.VISIBLE);
 
             player1_IMG_card.setImageResource(game.getPlayer1().getSelectedCards().get(chosenCard).getImageResource());
-            deckFrame[chosenCard].setBackgroundColor(Color.BLACK);
+            deckFrame[chosenCard].setBackgroundColor(R.color.gold);
             isChosen = true;
-        } else {
+        }
+        else {
             deck[chosenCard].setImageResource(game.getPlayer1().getSelectedCards().get(chosenCard).getImageResource());
             player1_IMG_card.setImageResource(R.drawable.ic_back_card);
             deck[chosenCard].setVisibility(View.VISIBLE);
@@ -151,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endGame() {
-        Log.d("MainActivity", "endGame called"); // Debug log to check if endGame is called
         Intent intent = new Intent(MainActivity.this, ResultActivity.class);
         intent.putExtra("player1Score", game.getPlayer1Score());
         intent.putExtra("player2Score", game.getPlayer2Score());

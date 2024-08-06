@@ -38,7 +38,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Card card = cardList.get(position);
         holder.cardName.setText(card.getName());
-        holder.cardPrice.setText(String.valueOf(card.getPrice()));
+        holder.cardValue.setText(String.valueOf(card.getValue()));
         holder.cardImage.setImageResource(card.getImageResource());
         holder.itemView.setOnClickListener(v -> onCardClickListener.onCardClick(card));
     }
@@ -51,13 +51,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public static class CardViewHolder extends RecyclerView.ViewHolder {
 
         ImageView cardImage;
-        TextView cardName, cardPrice;
+        TextView cardName;
+        TextView cardValue;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardImage = itemView.findViewById(R.id.card_image);
-            cardName = itemView.findViewById(R.id.card_name);
-            cardPrice = itemView.findViewById(R.id.card_price);
+            cardImage = itemView.findViewById(R.id.item_card_IMG_image); // Ensure this matches XML ID
+            cardName = itemView.findViewById(R.id.item_card_LBL_name);
+            cardValue = itemView.findViewById(R.id.item_card_LBL_value);
         }
     }
 

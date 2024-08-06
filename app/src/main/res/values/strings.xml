@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">War_of_Cards</string>
+    <string name="card_image">Card Image</string>
+
 </resources>

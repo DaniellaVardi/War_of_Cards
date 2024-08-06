@@ -62,8 +62,8 @@ public class CardSelectionAdapter extends RecyclerView.Adapter<CardSelectionAdap
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardImage = itemView.findViewById(R.id.item_card_image);
-            checkBox = itemView.findViewById(R.id.item_card_checkbox);
+//            cardImage = itemView.findViewById(R.id.item_card_image);
+//            checkBox = itemView.findViewById(R.id.item_card_checkbox);
         }
     }
 }

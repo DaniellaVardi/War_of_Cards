@@ -1,14 +1,17 @@
 package com.example.war_of_cards.Model;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Shop {
-    private List<Card> Cards;
+    private List<Card> cards;
 
     public Shop() {
-        this.Cards = new ArrayList<>();
-        // Add initial cards to the shop
+        this.cards = Arrays.asList(Deck.DECK);
+    }
+
+    public List<Card> getCards() {
+        return cards;
     }
 
     public boolean purchaseCard(Player player, Card card) {

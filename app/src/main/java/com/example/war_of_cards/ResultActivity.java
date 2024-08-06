@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.war_of_cards.Model.Game;
+
 public class ResultActivity extends AppCompatActivity {
 
     @Override
@@ -22,9 +24,9 @@ public class ResultActivity extends AppCompatActivity {
         Button mainMenuButton = findViewById(R.id.result_btn_main_menu);
 
         if (player1Score > player2Score) {
-            resultTextView.setText("Player 1 wins the game!");
+            resultTextView.setText("YOU WON !");
         } else if (player2Score > player1Score) {
-            resultTextView.setText("Player 2 wins the game!");
+            resultTextView.setText("YOU LOST !");
         } else {
             resultTextView.setText("The game is a draw!");
         }
