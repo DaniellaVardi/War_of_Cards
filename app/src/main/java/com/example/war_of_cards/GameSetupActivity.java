@@ -1,9 +1,12 @@
 package com.example.war_of_cards;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +23,7 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
     private MaterialButton setup_BTN_confirm;
     private List<Card> playerCards;
     private CardAdapter cardAdapter;
+    private Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +32,9 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
 
         setup_RV_cards = findViewById(R.id.setup_RV_cards);
         setup_BTN_confirm = findViewById(R.id.setup_BTN_confirm);
+        setup_BTN_confirm.setEnabled(false); // Disable button initially
 
-        // Initialize playerCards with the player's cards
+        player = new Player("John Doe", "123456789");  // Initialize Player with name "John"
         playerCards = getPlayerCards();
 
         cardAdapter = new CardAdapter(this, playerCards, this);
@@ -38,36 +43,45 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
         setup_RV_cards.setAdapter(cardAdapter);
 
         setup_BTN_confirm.setOnClickListener(v -> {
-            // Handle card selection confirmation
-            // Example: print selected cards
-            List<Card> selectedCards = getSelectedCards();
-            for (Card card : selectedCards) {
-                System.out.println("Selected Card: " + card.getName());
-            }
+            ArrayList<Card> selectedCards = new ArrayList<>(player.getSelectedCards());
+            player.setSelectedCards(selectedCards);  // Ensure selected cards are set
+
+            Intent intent = new Intent(GameSetupActivity.this, MainActivity.class);
+            intent.putExtra("player1", player);  // Pass the player object
+            startActivity(intent);
         });
     }
 
     private List<Card> getPlayerCards() {
-        // Create a sample player and cards for testing
-        Player player = new Player("John Doe", "123456789");
-        player.addCard(new Card("Card 1", 100, 10, R.drawable.ic_card_2000));
-        player.addCard(new Card("Card 2", 150, 15, R.drawable.ic_card_4000));
-        player.addCard(new Card("Card 3", 200, 20, R.drawable.ic_card_6000));
-        player.addCard(new Card("Card 4", 250, 25, R.drawable.ic_card_10000));
+        player.addCard(new Card("Card 1", 2000, 10, R.drawable.ic_card_2000));
+        player.addCard(new Card("Card 2", 4000, 15, R.drawable.ic_card_4000));
+        player.addCard(new Card("Card 3", 6000, 20, R.drawable.ic_card_6000));
+        player.addCard(new Card("Card 4", 10000, 25, R.drawable.ic_card_10000));
         return player.getCards();
     }
 
-    private List<Card> getSelectedCards() {
-        // Example method to retrieve selected cards
-        // Implement logic to get selected cards from your adapter or UI
-        return new ArrayList<>();
-    }
-
+    @SuppressLint({"ResourceAsColor", "NotifyDataSetChanged"})
     @Override
     public void onCardClick(Card card) {
-        // Handle card click, possibly adding it to a selection list
-        // Example: Toggle card selection
-        Toast.makeText(this, "Clicked Card", Toast.LENGTH_SHORT).show();
-        System.out.println("Clicked Card: " + card.getName());
+        if (player.getSelectedCards().contains(card)) {
+            player.getSelectedCards().remove(card);
+            card.setSelected(false);
+        } else {
+            if (player.getSelectedCards().size() < 3) {
+                player.getSelectedCards().add(card);
+                card.setSelected(true);
+            } else {
+                Toast.makeText(this, "You can only select 3 cards", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        cardAdapter.notifyDataSetChanged();
+        setup_BTN_confirm.setEnabled(player.getSelectedCards().size() == 3);
+
+        if (setup_BTN_confirm.isEnabled()) {
+            setup_BTN_confirm.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.gold));
+        } else {
+            setup_BTN_confirm.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.gray));
+        }
     }
 }

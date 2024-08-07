@@ -15,8 +15,8 @@ public class Shop {
     }
 
     public boolean purchaseCard(Player player, Card card) {
-        if (player.getCoins() >= card.getPrice()) {
-            player.removeCoins(card.getPrice());
+        if (player.getCoins() >= card.getValue()) {
+            player.removeCoins(card.getValue());
             player.addCard(card);
             return true;
         }

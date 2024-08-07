@@ -1,9 +1,13 @@
 package com.example.war_of_cards.Model;
 
+import android.util.Log;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+public class Player implements Serializable {
+    private static final long serialVersionUID = 1L; // Recommended for Serializable
     private String name;
     private String phoneNumber;
     private int coins;
@@ -14,8 +18,8 @@ public class Player {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.coins = 0;
-        this.cards = new ArrayList<Card>();
-        this.selectedCards = new ArrayList<Card>();
+        this.cards = new ArrayList<>();
+        this.selectedCards = new ArrayList<>();
     }
 
     public Player() {
@@ -45,6 +49,7 @@ public class Player {
 
     public Player setCoins(int coins) {
         this.coins = coins;
+        Log.d(" ", "The round is a draw.");
         return this;
     }
 
@@ -66,7 +71,6 @@ public class Player {
         return this;
     }
 
-
     public void addCard(Card card) {
         this.cards.add(card);
     }
@@ -83,7 +87,6 @@ public class Player {
         this.selectedCards.add(card);
     }
 
-
     @Override
     public String toString() {
         return "Player{" +
@@ -94,5 +97,3 @@ public class Player {
                 '}';
     }
 }
-
-

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.war_of_cards.Model.Card;
 import com.example.war_of_cards.Model.Game;
+import com.example.war_of_cards.Model.Player;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private int roundCounter = 0;
     private static final int TOTAL_ROUNDS = 3;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +60,20 @@ public class MainActivity extends AppCompatActivity {
         deckFrame[2] = frame3;
 
         game = new Game();
-        player1_LBL.setText(game.getPlayer1().getName());
-        player2_LBL.setText(game.getPlayer2().getName());
 
-        player1_IMG_card1.setImageResource(game.getPlayer1().getSelectedCards().get(0).getImageResource());
-        player1_IMG_card2.setImageResource(game.getPlayer1().getSelectedCards().get(1).getImageResource());
-        player1_IMG_card3.setImageResource(game.getPlayer1().getSelectedCards().get(2).getImageResource());
+        // Retrieve player1 from the intent
+        Player player1 = (Player) getIntent().getSerializableExtra("player1");
+        if (player1 != null) {
+            game.setPlayer1(player1);  // Set player1 in the game
+            player1_LBL.setText(player1.getName());
+
+            // Set up cards
+            player1_IMG_card1.setImageResource(player1.getSelectedCards().get(0).getImageResource());
+            player1_IMG_card2.setImageResource(player1.getSelectedCards().get(1).getImageResource());
+            player1_IMG_card3.setImageResource(player1.getSelectedCards().get(2).getImageResource());
+        }
+
+        player2_LBL.setText(game.getPlayer2().getName());
 
         player1_IMG_card.setOnClickListener(v -> playRound());
 
@@ -130,8 +140,7 @@ public class MainActivity extends AppCompatActivity {
             player1_IMG_card.setImageResource(game.getPlayer1().getSelectedCards().get(chosenCard).getImageResource());
             deckFrame[chosenCard].setBackgroundColor(R.color.gold);
             isChosen = true;
-        }
-        else {
+        } else {
             deck[chosenCard].setImageResource(game.getPlayer1().getSelectedCards().get(chosenCard).getImageResource());
             player1_IMG_card.setImageResource(R.drawable.ic_back_card);
             deck[chosenCard].setVisibility(View.VISIBLE);
@@ -163,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        player1_LBL_amount = findViewById(R.id.player1_LBL_amount);
         player1_LBL = findViewById(R.id.player1_LBL);
+        player1_LBL_amount = findViewById(R.id.player1_LBL_amount);
         player2_LBL = findViewById(R.id.player2_LBL);
 
         player1_IMG_card = findViewById(R.id.player1_IMG_card);

@@ -40,10 +40,11 @@
         android:textSize="20sp"
         android:fontFamily="@font/new_rocket"
         android:textColor="@color/white"
-        android:backgroundTint="@color/gold"
+        android:backgroundTint="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:enabled="false"
         android:layout_marginBottom="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

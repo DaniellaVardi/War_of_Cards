@@ -1,6 +1,7 @@
 package com.example.war_of_cards.Logic;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.cardName.setText(card.getName());
         holder.cardValue.setText(String.valueOf(card.getValue()));
         holder.cardImage.setImageResource(card.getImageResource());
+
+        // Highlight selected cards
+        if (card.isSelected()) {
+            holder.itemView.setBackgroundColor(Color.GREEN);
+        } else {
+            holder.itemView.setBackgroundColor(Color.WHITE);
+        }
+
         holder.itemView.setOnClickListener(v -> onCardClickListener.onCardClick(card));
     }
 
@@ -56,7 +65,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardImage = itemView.findViewById(R.id.item_card_IMG_image); // Ensure this matches XML ID
+            cardImage = itemView.findViewById(R.id.item_card_IMG_image);
             cardName = itemView.findViewById(R.id.item_card_LBL_name);
             cardValue = itemView.findViewById(R.id.item_card_LBL_value);
         }
