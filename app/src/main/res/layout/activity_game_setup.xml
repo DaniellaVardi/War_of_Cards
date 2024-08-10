@@ -41,10 +41,24 @@
         android:fontFamily="@font/new_rocket"
         android:textColor="@color/white"
         android:backgroundTint="@color/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/setup_BTN_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:enabled="false"
+        android:layout_marginBottom="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/setup_BTN_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back To Menu"
+        android:textSize="20sp"
+        android:fontFamily="@font/new_rocket"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/gold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

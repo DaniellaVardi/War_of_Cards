@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">War_of_Cards</string>
     <string name="card_image">Card Image</string>
+    <string name="login">Login</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="back_to_menu">BACK TO MENU</string>
+    <string name="purchase">Purchase</string>
+    <string name="shop">SHOP</string>
+    <string name="click_to_login">Click to login</string>
+    <string name="click_to_register">Click to register</string>
+    <string name="logout">LOGOUT</string>
 
 </resources>

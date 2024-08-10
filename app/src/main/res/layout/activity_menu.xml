@@ -14,7 +14,18 @@
         android:layout_width="wrap_content"
         android:layout_height="215dp"
         app:srcCompat="@drawable/ic_logo_background"
-        android:layout_marginBottom="250dp" />
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/user_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="user name"
+        android:textColor="@color/white"
+        android:fontFamily="@font/new_rocket"
+        android:textSize="35sp"
+        android:layout_marginBottom="35dp"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/onePlayer_BTN"
@@ -75,12 +86,32 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginBottom="10dp"
+        android:focusable="true"
         android:shadowDx="2.5"
         android:shadowDy="1.5"
         android:shadowRadius="1.5"
         android:textAllCaps="true"
         android:shadowColor="@color/black"
         android:text="SHOP"
+        android:fontFamily="@font/new_rocket"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/gold"
+        android:layout_gravity="center"
+        android:clickable="true" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logout_BTN"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:focusable="true"
+        android:shadowDx="2.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:textAllCaps="true"
+        android:shadowColor="@color/black"
+        android:text="@string/logout"
         android:fontFamily="@font/new_rocket"
         android:textSize="20sp"
         android:textColor="@color/white"

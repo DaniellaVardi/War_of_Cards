@@ -1,5 +1,6 @@
 package com.example.war_of_cards.Logic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         return new CardViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Card card = cardList.get(position);
@@ -44,7 +46,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         // Highlight selected cards
         if (card.isSelected()) {
-            holder.itemView.setBackgroundColor(Color.GREEN);
+            holder.itemView.setBackgroundColor(Color.DKGRAY);
+//            holder.itemView.setBackgroundColor(R.color.gold);
         } else {
             holder.itemView.setBackgroundColor(Color.WHITE);
         }

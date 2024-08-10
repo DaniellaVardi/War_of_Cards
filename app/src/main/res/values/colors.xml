@@ -4,5 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gold">#D1A46C</color>
     <color name="gray">#484A4F</color>
+    <color name="purple">#674E75</color>
     <color name="selected_card">#4CAF50</color> <!-- Example color for selected cards -->
 </resources>

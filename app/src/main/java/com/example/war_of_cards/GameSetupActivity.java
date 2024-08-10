@@ -21,6 +21,7 @@ import java.util.List;
 public class GameSetupActivity extends AppCompatActivity implements CardAdapter.OnCardClickListener {
     private RecyclerView setup_RV_cards;
     private MaterialButton setup_BTN_confirm;
+    private MaterialButton setup_BTN_back;
     private List<Card> playerCards;
     private CardAdapter cardAdapter;
     private Player player;
@@ -32,6 +33,8 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
 
         setup_RV_cards = findViewById(R.id.setup_RV_cards);
         setup_BTN_confirm = findViewById(R.id.setup_BTN_confirm);
+        setup_BTN_back = findViewById(R.id.setup_BTN_back);
+
         setup_BTN_confirm.setEnabled(false); // Disable button initially
 
         player = new Player("John Doe", "123456789");  // Initialize Player with name "John"
@@ -49,6 +52,13 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
             Intent intent = new Intent(GameSetupActivity.this, MainActivity.class);
             intent.putExtra("player1", player);  // Pass the player object
             startActivity(intent);
+        });
+
+        setup_BTN_back.setOnClickListener(v -> {
+            // Navigate back to the previous activity or menu
+            Intent intent = new Intent(GameSetupActivity.this, MenuActivity.class); // Replace MenuActivity with your actual menu activity class
+            startActivity(intent);
+            finish(); // Close the activity
         });
     }
 
