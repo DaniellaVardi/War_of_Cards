@@ -15,12 +15,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.war_of_cards.Model.Player;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -68,6 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 String email, password, name;
+
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
                 name = String.valueOf(editTextName.getText());
@@ -93,6 +98,16 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
+                                    String uid = "" + Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+                                    Player p = new Player();
+                                    p.setUid(uid);
+                                    p.setName(name);
+                                    p.setEmail(email);
+
+                                    p.loadToDataBase();
+                                    p.readPlayerData(uid);
+
                                     Toast.makeText(RegisterActivity.this, "Account Created",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), MenuActivity.class);

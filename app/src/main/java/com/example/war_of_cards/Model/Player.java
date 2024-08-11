@@ -1,28 +1,40 @@
 package com.example.war_of_cards.Model;
 
 import android.util.Log;
-
+import com.example.war_of_cards.Database.DataBaseInterface;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements Serializable {
-    private static final long serialVersionUID = 1L; // Recommended for Serializable
+public class Player implements Serializable, DataBaseInterface {
+    private static final long serialVersionUID = 1L;
+    private String uid = "";
     private String name;
-    private String phoneNumber;
+    private String email;
     private int coins;
     private ArrayList<Card> cards;
     private ArrayList<Card> selectedCards;
 
-    public Player(String name, String phoneNumber) {
+    public Player(String name, String email) {
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.coins = 0;
         this.cards = new ArrayList<>();
         this.selectedCards = new ArrayList<>();
     }
 
     public Player() {
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public Player setUid(String uid) {
+        this.uid = uid;
+        return this;
     }
 
     public String getName() {
@@ -34,12 +46,12 @@ public class Player implements Serializable {
         return this;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public Player setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public Player setEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -49,11 +61,11 @@ public class Player implements Serializable {
 
     public Player setCoins(int coins) {
         this.coins = coins;
-        Log.d(" ", "The round is a draw.");
+        Log.d("Player", "Coins updated: " + coins);
         return this;
     }
 
-    public List<Card> getCards() {
+    public ArrayList<Card> getCards() {
         return cards;
     }
 
@@ -84,16 +96,60 @@ public class Player implements Serializable {
     }
 
     public void addSelectedCard(Card card) {
-        this.selectedCards.add(card);
+        if (selectedCards.size() < 3) {
+            this.selectedCards.add(card);
+        } else {
+            Log.d("Player", "Cannot select more than 3 cards.");
+        }
+    }
+
+    public void removeSelectedCard(Card card) {
+        this.selectedCards.remove(card);
+    }
+
+    public boolean isCardSelected(Card card) {
+        return this.selectedCards.contains(card);
+    }
+
+    @Override
+    public void loadToDataBase() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("Players");
+
+        String id = this.getUid();
+        Log.d("Player", "loadToDataBase: " + id);
+
+        ref.child(id).setValue(this)
+                .addOnSuccessListener(aVoid -> Log.d("Player", "Data saved successfully"))
+                .addOnFailureListener(e -> Log.d("Player", "Failed to save data: " + e.getMessage()));
+    }
+
+    public void readPlayerData(String uid) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Players").child(uid);
+
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Player player = task.getResult().getValue(Player.class);
+                if (player != null) {
+                    Log.d("Player", "Player data: " + player.toString());
+                } else {
+                    Log.d("Player", "Player data is null");
+                }
+            } else {
+                Log.d("Player", "Failed to read data: " + task.getException());
+            }
+        });
     }
 
     @Override
     public String toString() {
         return "Player{" +
-                "coins=" + coins +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", coins=" + coins +
                 ", cards=" + cards +
                 ", selectedCards=" + selectedCards +
-                ", name='" + name + '\'' +
                 '}';
     }
 }

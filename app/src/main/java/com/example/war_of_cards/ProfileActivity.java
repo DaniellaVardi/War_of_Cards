@@ -1,52 +1,65 @@
 package com.example.war_of_cards;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.war_of_cards.Model.Player;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileActivity extends AppCompatActivity {
-
     private TextView profileName;
-    private TextView profilePhoneNumber;
+    private TextView profileEmail;
     private TextView profileCoins;
-//    private TextView profileCards;
     private Player player;
+    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Initialize views
         profileName = findViewById(R.id.profile_name);
-        profilePhoneNumber = findViewById(R.id.profile_phone_number);
+        profileEmail = findViewById(R.id.profile_email);
         profileCoins = findViewById(R.id.profile_coins);
-//        profileCards = findViewById(R.id.profile_cards);
+        backButton = findViewById(R.id.back_BTN);
 
-        // Retrieve the player object (this is just a placeholder, update accordingly)
-        player = getPlayer(); // Implement this method to retrieve the Player object
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Players").child(uid);
 
-        // Set the player details to the views
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                player = task.getResult().getValue(Player.class);
+                Log.d("player", player.toString());
+                if (player != null) {
+                    updateProfileUI();
+                }
+            }
+        });
+
+        // Set up the return to menu button
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the Main Menu Activity
+                Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
+                startActivity(intent);
+                finish(); // Optional: Close the current activity
+            }
+        });
+    }
+
+
+    private void updateProfileUI() {
         profileName.setText(player.getName());
-        profilePhoneNumber.setText(player.getPhoneNumber());
+        profileEmail.setText(player.getEmail());
         profileCoins.setText(String.valueOf(player.getCoins()));
-//        profileCards.setText(getPlayerCards(player)); // Implement this method to retrieve the player's card names
+        // Update UI with the player's cards as needed
     }
-
-    private Player getPlayer() {
-        // Retrieve the player object, possibly from an Intent or a saved instance state
-        // This is a placeholder method, implement it according to your needs
-        return new Player("Player 1", "1234567890");
-    }
-
-//    private String getPlayerCards(Player player) {
-//        StringBuilder cardsBuilder = new StringBuilder();
-//        for (Card card : player.getCards()) {
-//            cardsBuilder.append(card.getName()).append("\n");
-//        }
-//        return cardsBuilder.toString();
-//    }
 }

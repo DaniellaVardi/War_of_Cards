@@ -1,5 +1,11 @@
 package com.example.war_of_cards.Model;
 
+import android.util.Log;
+
+import com.example.war_of_cards.Database.DataBaseInterface;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.Serializable;
 
 public class Card implements Serializable {
@@ -60,6 +66,19 @@ public class Card implements Serializable {
     public void setImageResource(int imageResource) {
         this.imageResource = imageResource;
     }
+
+//    @Override
+//    public void loadToDataBase() {
+//        FirebaseDatabase db = FirebaseDatabase.getInstance();
+//        DatabaseReference ref = db.getReference("Cards");
+//
+//        String id = this.getUid();
+//        Log.d("Player", "loadToDataBase: " + id);
+//
+//        ref.child(id).setValue(this)
+//                .addOnSuccessListener(aVoid -> Log.d("Player", "Data saved successfully"))
+//                .addOnFailureListener(e -> Log.d("Player", "Failed to save data: " + e.getMessage()));
+//    }
 
     @Override
     public String toString() {

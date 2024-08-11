@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "835299561333",
-    "project_id": "war-of-cards-adecf",
-    "storage_bucket": "war-of-cards-adecf.appspot.com"
+    "project_number": "530044372588",
+    "project_id": "war-of-cards-newdb",
+    "storage_bucket": "war-of-cards-newdb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:835299561333:android:212fbb82454caf1d538d3c",
+        "mobilesdk_app_id": "1:530044372588:android:96a64d9c4300c98c443a49",
         "android_client_info": {
           "package_name": "com.example.war_of_cards"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBH6vuEW02TaXy8eytub3CU1x0w_TuVEh4"
+          "current_key": "AIzaSyBeiIeJjHdjNCLmLyxMQ-ufV49CXltx3oc"
         }
       ],
       "services": {
