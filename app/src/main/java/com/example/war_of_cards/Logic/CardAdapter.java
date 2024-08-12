@@ -47,7 +47,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         // Highlight selected cards
         if (card.isSelected()) {
             holder.itemView.setBackgroundColor(Color.DKGRAY);
-//            holder.itemView.setBackgroundColor(R.color.gold);
         } else {
             holder.itemView.setBackgroundColor(Color.WHITE);
         }
