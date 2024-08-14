@@ -1,5 +1,6 @@
 package com.example.war_of_cards;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,18 +8,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.war_of_cards.Model.Player;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class ProfileActivity extends AppCompatActivity {
+import com.example.war_of_cards.Database.DatabaseService;
+import com.example.war_of_cards.Logic.CardAdapter;
+import com.example.war_of_cards.Model.Card;
+import com.example.war_of_cards.Model.Player;
+
+public class ProfileActivity extends AppCompatActivity implements CardAdapter.OnCardClickListener {
     private TextView profileName;
     private TextView profileEmail;
     private TextView profileCoins;
+    private RecyclerView profile_RV_items;
     private Player player;
     private Button backButton;
+    private DatabaseService dbs;
 
+    @SuppressLint({"MissingInflatedId", "NotifyDataSetChanged"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,31 +34,33 @@ public class ProfileActivity extends AppCompatActivity {
         profileName = findViewById(R.id.profile_name);
         profileEmail = findViewById(R.id.profile_email);
         profileCoins = findViewById(R.id.profile_coins);
+        profile_RV_items= findViewById(R.id.profile_RV_items);
         backButton = findViewById(R.id.back_BTN);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String uid = auth.getCurrentUser().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Players").child(uid);
+        dbs = new DatabaseService("Players");
+        Log.d("Player","player1 before:"+Player.getInstancePlayer().toString());
+        player = Player.getInstancePlayer();
+        player.updateFromDB();
+        Log.d("Player","player1 after:"+Player.getInstancePlayer().toString());
 
-        ref.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                player = task.getResult().getValue(Player.class);
-                Log.d("player", player.toString());
-                if (player != null) {
-                    updateProfileUI();
-                }
-            }
-        });
+
+
+        CardAdapter cardAdapter = new CardAdapter(this, player.getCards(), this);
+        Log.d("CARDS", "player cards:" + player.getCards());
+
+        // Set GridLayoutManager with 2 columns
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        profile_RV_items.setLayoutManager(gridLayoutManager);
+        profile_RV_items.setAdapter(cardAdapter);
+        cardAdapter.notifyDataSetChanged();
+        updateProfileUI();
 
         // Set up the return to menu button
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start the Main Menu Activity
-                Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
-                startActivity(intent);
-                finish(); // Optional: Close the current activity
-            }
+        backButton.setOnClickListener(v -> {
+            // Start the Main Menu Activity
+            Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
+            startActivity(intent);
+            finish(); // Optional: Close the current activity
         });
     }
 
@@ -60,6 +69,11 @@ public class ProfileActivity extends AppCompatActivity {
         profileName.setText(player.getName());
         profileEmail.setText(player.getEmail());
         profileCoins.setText(String.valueOf(player.getCoins()));
+
         // Update UI with the player's cards as needed
+    }
+
+    @Override
+    public void onCardClick(Card card) {
     }
 }

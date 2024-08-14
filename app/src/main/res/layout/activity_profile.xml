@@ -85,25 +85,21 @@
         android:id="@+id/profile_cards_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selected Cards:"
+        android:text="My Cards:"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_coins_label"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp" />
 
-    <LinearLayout
-        android:id="@+id/profile_cards_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profile_RV_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/profile_coins"
-        android:layout_marginTop="20dp"
-        android:padding="8dp"
-        android:background="@android:color/darker_gray">
+        tools:listitem="@layout/item_card_shop"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@id/profile_cards_label"/>
 
-        <!-- This is where individual cards will be added dynamically -->
-    </LinearLayout>
 
     <Button
         android:id="@+id/back_BTN"

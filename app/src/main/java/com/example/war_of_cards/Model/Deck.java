@@ -2,12 +2,9 @@ package com.example.war_of_cards.Model;
 
 import com.example.war_of_cards.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Deck {
 
-    public static final Card[] DECK = {
+    public static final Card[] CARDS = {
         new Card("Peasant", 1000, 1000, R.drawable.ic_card_1000),
         new Card("Elf", 2000, 2000, R.drawable.ic_card_2000),
         new Card("Centaur", 3000, 3000, R.drawable.ic_card_3000),

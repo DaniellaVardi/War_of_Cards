@@ -35,7 +35,7 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
         setContentView(R.layout.activity_shop);
 
         shop = new Shop();
-        player = new Player("John Doe", "john.doe@example.com"); // Hardcoded player initialization for testing
+        player = Player.getInstancePlayer();// Hardcoded player initialization for testing
 
         player.setCoins(6000);
 
@@ -80,16 +80,17 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
                 for (Card card : cardsToBuy) {
                     if (shop.purchaseCard(player, card)) {
                         Toast.makeText(ShopActivity.this, "Card purchased: " + card.getName(), Toast.LENGTH_SHORT).show();
+                        // Navigate back to the menu
+                        Intent intent = new Intent(ShopActivity.this, MenuActivity.class);
+                        startActivity(intent);
+                        finish(); // Close ShopActivity
                     }
                 }
                 cardAdapter.notifyDataSetChanged();
                 amountTextView.setText("Amount: " + player.getCoins()); // Update player's amount
+
             }
 
-            // Navigate back to the menu
-            Intent intent = new Intent(ShopActivity.this, MenuActivity.class);
-            startActivity(intent);
-            finish(); // Close ShopActivity
         });
 
         backButton.setOnClickListener(v -> {

@@ -17,6 +17,10 @@ public class Card implements Serializable {
     private int imageResource;
     private boolean selected; // Add this field
 
+    public Card(){
+        this.selected = false; // Initialize as not selected
+    }
+
     public Card(String name, int value, int power, int imageResource) {
         this.name = name;
         this.value = value;
@@ -66,19 +70,6 @@ public class Card implements Serializable {
     public void setImageResource(int imageResource) {
         this.imageResource = imageResource;
     }
-
-//    @Override
-//    public void loadToDataBase() {
-//        FirebaseDatabase db = FirebaseDatabase.getInstance();
-//        DatabaseReference ref = db.getReference("Cards");
-//
-//        String id = this.getUid();
-//        Log.d("Player", "loadToDataBase: " + id);
-//
-//        ref.child(id).setValue(this)
-//                .addOnSuccessListener(aVoid -> Log.d("Player", "Data saved successfully"))
-//                .addOnFailureListener(e -> Log.d("Player", "Failed to save data: " + e.getMessage()));
-//    }
 
     @Override
     public String toString() {

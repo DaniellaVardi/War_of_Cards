@@ -7,7 +7,7 @@ public class Shop {
     private List<Card> cards;
 
     public Shop() {
-        this.cards = Arrays.asList(Deck.DECK);
+        this.cards = Arrays.asList(Deck.CARDS);
     }
 
     public List<Card> getCards() {

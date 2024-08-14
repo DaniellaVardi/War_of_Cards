@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.war_of_cards.Audio.SoundManager;
 import com.example.war_of_cards.Model.Card;
 import com.example.war_of_cards.Model.Game;
 import com.example.war_of_cards.Model.Player;
@@ -18,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
 public class MainActivity extends AppCompatActivity {
+
     private MaterialTextView player1_LBL_amount;
     private MaterialTextView player2_LBL;
     private MaterialTextView player1_LBL;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private int roundCounter = 0;
     private static final int TOTAL_ROUNDS = 3;
 
+    private SoundManager soundManager;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViews();
+
+        soundManager = new SoundManager(this);
 
         deck[0] = player1_IMG_card1;
         deck[1] = player1_IMG_card2;
@@ -58,21 +65,31 @@ public class MainActivity extends AppCompatActivity {
         deckFrame[1] = frame2;
         deckFrame[2] = frame3;
 
+        Log.d("Player","player12345 after main:"+Player.getInstancePlayer().toString());
+
+        Player player1 = Player.getInstancePlayer();
         game = new Game();
 
-        // Retrieve player1 from the intent
-        Player player1 = (Player) getIntent().getSerializableExtra("player1");
+//        Player player1 = (Player) getIntent().getSerializableExtra("player1");
+
+
+
         if (player1 != null) {
-            game.setPlayer1(player1);  // Set player1 in the game
+            game.setPlayer1(player1);
             player1_LBL.setText(player1.getName());
 
-            // Set up cards
             player1_IMG_card1.setImageResource(player1.getSelectedCards().get(0).getImageResource());
             player1_IMG_card2.setImageResource(player1.getSelectedCards().get(1).getImageResource());
             player1_IMG_card3.setImageResource(player1.getSelectedCards().get(2).getImageResource());
         }
 
         player2_LBL.setText(game.getPlayer2().getName());
+
+        // Play the game start sound (looping)
+        soundManager.playLooping(SoundManager.SOUND_GAME_START);
+
+        // Play the round 1 sound
+        soundManager.playSound(SoundManager.SOUND_ROUND_1);
 
         player1_IMG_card.setOnClickListener(v -> playRound());
 
@@ -117,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < boolImage.length; i++) {
             if (boolImage[i]) {
-                deckFrame[i].setBackgroundColor(Color.GREEN);
+                deckFrame[i].setBackgroundColor(Color.CYAN);
             } else {
                 deckFrame[i].setBackgroundColor(R.color.gold);
             }
@@ -156,6 +173,15 @@ public class MainActivity extends AppCompatActivity {
         player2_IMG_card.setImageResource(R.drawable.ic_back_card);
         main_BTN_endTurn.setVisibility(View.GONE);
 
+        // Play round sound based on the round counter
+        if (roundCounter == 0) {
+            soundManager.playSound(SoundManager.SOUND_ROUND_1);
+        } else if (roundCounter == 1) {
+            soundManager.playSound(SoundManager.SOUND_ROUND_2);
+        } else if (roundCounter == 2) {
+            soundManager.playSound(SoundManager.SOUND_ROUND_3);
+        }
+
         roundCounter++;
         if (roundCounter >= TOTAL_ROUNDS) {
             endGame();
@@ -163,18 +189,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endGame() {
-        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-        intent.putExtra("player1Score", game.getPlayer1Score());
-        intent.putExtra("player2Score", game.getPlayer2Score());
-        startActivity(intent);
-        finish();
+        soundManager.stopLooping(); // Stop the looping game start sound
+        Intent resultIntent = new Intent(this, ResultActivity.class);
+        resultIntent.putExtra("player1Score", game.getPlayer1Score());
+        resultIntent.putExtra("player2Score", game.getPlayer2Score());
+        startActivity(resultIntent);
     }
 
     private void findViews() {
-        player1_LBL = findViewById(R.id.player1_LBL);
         player1_LBL_amount = findViewById(R.id.player1_LBL_amount);
         player2_LBL = findViewById(R.id.player2_LBL);
-
+        player1_LBL = findViewById(R.id.player1_LBL);
         player1_IMG_card = findViewById(R.id.player1_IMG_card);
         player2_IMG_card = findViewById(R.id.player2_IMG_card);
 
@@ -188,5 +213,11 @@ public class MainActivity extends AppCompatActivity {
 
         main_BTN_makeTurn = findViewById(R.id.main_BTN_makeTurn);
         main_BTN_endTurn = findViewById(R.id.main_BTN_endTurn);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        soundManager.release();
     }
 }

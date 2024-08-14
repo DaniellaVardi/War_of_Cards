@@ -3,6 +3,7 @@ package com.example.war_of_cards;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +38,9 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
 
         setup_BTN_confirm.setEnabled(false); // Disable button initially
 
-        player = new Player("John Doe", "123456789");  // Initialize Player with name "John"
-        playerCards = getPlayerCards();
+
+        player = Player.getInstancePlayer(); // Initialize Player with name "John"
+        playerCards = player.getCards();
 
         cardAdapter = new CardAdapter(this, playerCards, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -50,7 +52,7 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
             player.setSelectedCards(selectedCards);  // Ensure selected cards are set
 
             Intent intent = new Intent(GameSetupActivity.this, MainActivity.class);
-            intent.putExtra("player1", player);  // Pass the player object
+            Log.d("Player","player12345 after confirm:"+Player.getInstancePlayer().toString());
             startActivity(intent);
         });
 
@@ -60,14 +62,6 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
             startActivity(intent);
             finish(); // Close the activity
         });
-    }
-
-    private List<Card> getPlayerCards() {
-        player.addCard(new Card("Card 1", 2000, 10, R.drawable.ic_card_2000));
-        player.addCard(new Card("Card 2", 4000, 15, R.drawable.ic_card_4000));
-        player.addCard(new Card("Card 3", 6000, 20, R.drawable.ic_card_6000));
-        player.addCard(new Card("Card 4", 10000, 25, R.drawable.ic_card_10000));
-        return player.getCards();
     }
 
     @SuppressLint({"ResourceAsColor", "NotifyDataSetChanged"})

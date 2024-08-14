@@ -100,9 +100,6 @@
     </LinearLayout>
 
 
-
-
-
     <LinearLayout
         android:id="@+id/player1_LBL_card_options"
         android:layout_width="match_parent"

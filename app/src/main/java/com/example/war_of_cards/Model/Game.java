@@ -1,9 +1,6 @@
 package com.example.war_of_cards.Model;
 
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.war_of_cards.R;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -17,7 +14,7 @@ public class Game {
     private int player2Score;
 
     public Game() {
-        this.player2 = new Player("AI", "0543550597");
+        player2 = Player.getInstancePlayerAI();
 
         // Initialize AI cards
         initAiCards();
@@ -28,6 +25,9 @@ public class Game {
 
     public void setPlayer1(Player player1) {
         this.player1 = player1;
+
+        Log.d("Player","player1111:"+player1.toString());
+
 
         // Ensure player1 has selected cards if they were not set already
         if (this.player1.getSelectedCards().isEmpty() && this.player1.getCards().size() >= 3) {
@@ -49,13 +49,13 @@ public class Game {
         Set<Integer> set = new HashSet<>();
         Random random = new Random();
         do {
-            int temp = random.nextInt(Deck.DECK.length);
+            int temp = random.nextInt(Deck.CARDS.length);
             if (set.contains(temp)) continue;
 
             set.add(temp);
             x++;
 
-            player2.addCard(Deck.DECK[temp]);
+            player2.addSelectedCard(Deck.CARDS[temp]);
 
         } while (x < 3);
     }
@@ -65,8 +65,8 @@ public class Game {
         if (player2.getSelectedCards().isEmpty() || player1.getSelectedCards().isEmpty()) return null;
 
         Card card1 = player1.getSelectedCards().get(chosenCard);
-        int randomIndex = random.nextInt(player2.getCards().size());
-        Card card2 = player2.getCards().get(randomIndex);
+        int randomIndex = random.nextInt(player2.getSelectedCards().size());
+        Card card2 = player2.getSelectedCards().get(randomIndex);
 
         if (card1.getValue() > card2.getValue()) {
             player1Score += 1000;
@@ -79,6 +79,8 @@ public class Game {
         player2.getSelectedCards().remove(card2);
         player1.setCoins(player1Score);
         player2.setCoins(player2Score);
+        Log.d("Player","player1:"+player1.toString());
+        Log.d("Player","player2:"+player2.toString());
         Log.d("Coins", "player1 coins = " + player1.getCoins());
         Log.d("Coins", "player2 coins = " + player2.getCoins());
 

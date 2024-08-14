@@ -2,12 +2,14 @@ package com.example.war_of_cards;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.war_of_cards.Model.Player;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -73,6 +75,7 @@ public class MenuActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(MenuActivity.this, ProfileActivity.class);
+                Log.d("Player","player12345 after menu:"+Player.getInstancePlayer().toString());
                 startActivity(intent);
             }
         });

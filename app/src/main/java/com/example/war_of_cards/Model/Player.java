@@ -1,31 +1,64 @@
 package com.example.war_of_cards.Model;
 
 import android.util.Log;
-import com.example.war_of_cards.Database.DataBaseInterface;
+
+import androidx.annotation.NonNull;
+
+import com.example.war_of_cards.Database.DatabaseService;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class Player implements Serializable, DataBaseInterface {
+public class Player implements Serializable {
     private static final long serialVersionUID = 1L;
     private String uid = "";
     private String name;
     private String email;
     private int coins;
-    private ArrayList<Card> cards;
+    private static ArrayList<Card> cards;
     private ArrayList<Card> selectedCards;
+    private static DatabaseService dbs;
+    private static Player instancePlayer = null;
+    private static Player instanceAI = null;
 
-    public Player(String name, String email) {
+    private Player(String uid,String name, String email) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.coins = 0;
-        this.cards = new ArrayList<>();
+        cards = new ArrayList<>();
         this.selectedCards = new ArrayList<>();
+        dbs = new DatabaseService("Players");
     }
 
-    public Player() {
+    private Player() {
+        this.coins = 0;
+        cards = new ArrayList<>();
+        this.selectedCards = new ArrayList<>();
+        dbs = new DatabaseService("Players");
+    }
+
+    public static void init(String uid, String name, String email, String type) {
+        if(Objects.equals(type, "Player")) {
+            instancePlayer = new Player(uid, name, email);
+            Log.d("Player","jhfhff1:"+Player.getInstancePlayer().toString());
+
+        }else {
+            instanceAI = new Player();
+            Log.d("Player","jhfhff2:"+Player.getInstancePlayer().toString());
+
+
+        }
+    }
+
+    public static Player getInstancePlayerAI() {
+        return instanceAI;
+    }
+    public static Player getInstancePlayer() {
+        return instancePlayer;
     }
 
     public String getUid() {
@@ -69,9 +102,8 @@ public class Player implements Serializable, DataBaseInterface {
         return cards;
     }
 
-    public Player setCards(ArrayList<Card> cards) {
-        this.cards = cards;
-        return this;
+    public static void setCards(ArrayList<Card> cs) {
+        cards = cs;
     }
 
     public List<Card> getSelectedCards() {
@@ -111,20 +143,14 @@ public class Player implements Serializable, DataBaseInterface {
         return this.selectedCards.contains(card);
     }
 
-    @Override
-    public void loadToDataBase() {
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference("Players");
-
-        String id = this.getUid();
+    public static void save(String id) {
         Log.d("Player", "loadToDataBase: " + id);
+        if (dbs != null) dbs.save(instancePlayer, id);
+        else Log.e("Player", "DatabaseService not initialized");
 
-        ref.child(id).setValue(this)
-                .addOnSuccessListener(aVoid -> Log.d("Player", "Data saved successfully"))
-                .addOnFailureListener(e -> Log.d("Player", "Failed to save data: " + e.getMessage()));
     }
 
-    public void readPlayerData(String uid) {
+    public static void readPlayerData(String uid) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Players").child(uid);
 
         ref.get().addOnCompleteListener(task -> {
@@ -141,6 +167,7 @@ public class Player implements Serializable, DataBaseInterface {
         });
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Player{" +
@@ -151,5 +178,21 @@ public class Player implements Serializable, DataBaseInterface {
                 ", cards=" + cards +
                 ", selectedCards=" + selectedCards +
                 '}';
+    }
+
+    public void updateFromDB() {
+        dbs.updatePlayer(uid, new DatabaseService.DataLoadCallback() {
+
+            @Override
+            public void onDataLoaded(Player player) {
+                instancePlayer = player;
+            }
+
+            @Override
+            public void onDataLoadFailed(String error) {
+                Log.d("Player", "Failed update player !");
+            }
+
+        });
     }
 }
