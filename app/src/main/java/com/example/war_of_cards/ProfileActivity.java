@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity implements CardAdapter.On
         profileName = findViewById(R.id.profile_name);
         profileEmail = findViewById(R.id.profile_email);
         profileCoins = findViewById(R.id.profile_coins);
-        profile_RV_items= findViewById(R.id.profile_RV_items);
+        profile_RV_items = findViewById(R.id.profile_RV_items);
         backButton = findViewById(R.id.back_BTN);
 
         dbs = new DatabaseService("Players");
@@ -43,7 +43,10 @@ public class ProfileActivity extends AppCompatActivity implements CardAdapter.On
         player.updateFromDB();
         Log.d("Player","player1 after:"+Player.getInstancePlayer().toString());
 
-
+        // Deselect all cards
+        for (Card card : player.getCards()) {
+            card.setSelected(false);
+        }
 
         CardAdapter cardAdapter = new CardAdapter(this, player.getCards(), this);
         Log.d("CARDS", "player cards:" + player.getCards());
@@ -64,16 +67,14 @@ public class ProfileActivity extends AppCompatActivity implements CardAdapter.On
         });
     }
 
-
     private void updateProfileUI() {
         profileName.setText(player.getName());
         profileEmail.setText(player.getEmail());
         profileCoins.setText(String.valueOf(player.getCoins()));
-
-        // Update UI with the player's cards as needed
     }
 
     @Override
     public void onCardClick(Card card) {
+        // Handle card click events if needed
     }
 }

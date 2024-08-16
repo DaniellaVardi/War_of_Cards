@@ -13,6 +13,7 @@ import com.example.war_of_cards.Model.Game;
 public class ResultActivity extends AppCompatActivity {
 
     private SoundManager soundManager;
+    private Game game;
 
 
     @Override
@@ -21,35 +22,44 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
         soundManager = new SoundManager(this);
 
+        // Retrieve the game object passed from the previous activity
+        game = (Game) getIntent().getSerializableExtra("game");
 
-        int player1Score = getIntent().getIntExtra("player1Score", 0);
-        int player2Score = getIntent().getIntExtra("player2Score", 0);
+        TextView resultTextView = null;
+        if (game != null) {
+            int player1Score = game.getPlayer1Score();
+            int player2Score = game.getPlayer2Score();
 
-        TextView resultTextView = findViewById(R.id.result_text_view);
-        Button playAgainButton = findViewById(R.id.result_btn_play_again);
-        Button mainMenuButton = findViewById(R.id.result_btn_main_menu);
+            resultTextView = findViewById(R.id.result_text_view);
+            Button playAgainButton = findViewById(R.id.result_btn_play_again);
+            Button mainMenuButton = findViewById(R.id.result_btn_main_menu);
 
-        if (player1Score > player2Score) {
-            resultTextView.setText("VICTORY !");
-            soundManager.playSound(SoundManager.SOUND_VICTORY);
-        } else if (player2Score > player1Score) {
-            resultTextView.setText("YOU LOSE !");
-            soundManager.playSound(SoundManager.SOUND_LOSE);
+            if (player1Score > player2Score) {
+                resultTextView.setText("VICTORY !");
+                soundManager.playSound(SoundManager.SOUND_VICTORY);
+            } else if (player2Score > player1Score) {
+                resultTextView.setText("YOU LOSE !");
+                soundManager.playSound(SoundManager.SOUND_LOSE);
+            } else {
+                resultTextView.setText("The game is a draw!");
+            }
+
+            playAgainButton.setOnClickListener(v -> {
+                Intent intent = new Intent(ResultActivity.this, GameSetupActivity.class);
+                intent.putExtra("mode", getIntent().getStringExtra("mode"));
+                startActivity(intent);
+            });
+
+            mainMenuButton.setOnClickListener(v -> {
+                Intent intent = new Intent(ResultActivity.this, MenuActivity.class);
+                startActivity(intent);
+            });
         } else {
-            resultTextView.setText("The game is a draw!");
+            // Handle the case where game is null
+            resultTextView.setText("Error: Game data is missing.");
         }
-
-        playAgainButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ResultActivity.this, GameSetupActivity.class);
-            intent.putExtra("mode", getIntent().getStringExtra("mode"));
-            startActivity(intent);
-        });
-
-        mainMenuButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ResultActivity.this, MenuActivity.class);
-            startActivity(intent);
-        });
     }
+
 
     @Override
     protected void onDestroy() {

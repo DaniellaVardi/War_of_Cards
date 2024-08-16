@@ -1,44 +1,43 @@
 package com.example.war_of_cards.Model;
 
-import android.util.Log;
-
-import com.example.war_of_cards.Database.DataBaseInterface;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import com.example.war_of_cards.Database.DatabaseService;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Card implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    private String id; // Unique identifier for the card
     private String name;
     private int value;
     private int power;
     private int imageResource;
-    private boolean selected; // Add this field
+    private boolean selected;
+    private static DatabaseService dbs;
 
-    public Card(){
+    public Card() {
         this.selected = false; // Initialize as not selected
+        dbs = new DatabaseService("Cards");
     }
 
-    public Card(String name, int value, int power, int imageResource) {
+    public Card(String id, String name, int value, int power, int imageResource) {
+        this.id = id;
         this.name = name;
         this.value = value;
         this.power = power;
         this.imageResource = imageResource;
         this.selected = false; // Initialize as not selected
+        dbs = new DatabaseService("Cards");
     }
 
-    // Getters and setters for the new field
-    public boolean isSelected() {
-        return selected;
+    // Getters and setters for all fields, including id
+    public String getId() {
+        return id;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    // Other existing getters and setters...
     public String getName() {
         return name;
     }
@@ -71,14 +70,36 @@ public class Card implements Serializable {
         this.imageResource = imageResource;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
     @Override
     public String toString() {
         return "Card{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", value=" + value +
                 ", power=" + power +
                 ", imageResource=" + imageResource +
                 ", selected=" + selected +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return id.equals(card.id); // Compare based on card id
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Hash based on card id
     }
 }

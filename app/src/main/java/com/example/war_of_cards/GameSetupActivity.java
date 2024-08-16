@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameSetupActivity extends AppCompatActivity implements CardAdapter.OnCardClickListener {
+
     private RecyclerView setup_RV_cards;
     private MaterialButton setup_BTN_confirm;
     private MaterialButton setup_BTN_back;
@@ -38,9 +39,18 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
 
         setup_BTN_confirm.setEnabled(false); // Disable button initially
 
+        player = Player.getInstancePlayer(); // Initialize Player
 
-        player = Player.getInstancePlayer(); // Initialize Player with name "John"
+        // Clear selected cards when entering GameSetupActivity
+        clearSelectedCards();
+
+        // Initialize playerCards with the available cards
         playerCards = player.getCards();
+
+        // Deselect all cards at the start
+        for (Card card : playerCards) {
+            card.setSelected(false);
+        }
 
         cardAdapter = new CardAdapter(this, playerCards, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -52,7 +62,7 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
             player.setSelectedCards(selectedCards);  // Ensure selected cards are set
 
             Intent intent = new Intent(GameSetupActivity.this, MainActivity.class);
-            Log.d("Player","player12345 after confirm:"+Player.getInstancePlayer().toString());
+            Log.d("Player", "player12345 after confirm:" + Player.getInstancePlayer().toString());
             startActivity(intent);
         });
 
@@ -62,6 +72,12 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
             startActivity(intent);
             finish(); // Close the activity
         });
+    }
+
+    private void clearSelectedCards() {
+        if (player.getSelectedCards() != null) {
+            player.getSelectedCards().clear(); // Clear the list
+        }
     }
 
     @SuppressLint({"ResourceAsColor", "NotifyDataSetChanged"})

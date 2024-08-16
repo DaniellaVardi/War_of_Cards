@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.war_of_cards.Database.DatabaseService;
 import com.example.war_of_cards.Model.Card;
 import com.example.war_of_cards.Model.Deck;
 import com.example.war_of_cards.Model.Player;
@@ -58,71 +59,62 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         textView = findViewById(R.id.loginNow);
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        textView.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        buttonReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                String name = editTextName.getText().toString().trim();
+        buttonReg.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            String name = editTextName.getText().toString().trim();
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(RegisterActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    return;
-                }
-
-                if (TextUtils.isEmpty(name)) {
-                    Toast.makeText(RegisterActivity.this, "Enter name", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    return;
-                }
-
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    String uid = user != null ? user.getUid() : "";
-
-                                    Player.init(uid, name, email, "Player");
-                                    Player.init("","","","AI");
-
-                                    ArrayList<Card> cards = new ArrayList<>(Arrays.asList(Deck.CARDS).subList(0, 4));
-                                    Player.setCards(cards);
-
-                                    Player.save(uid);
-                                    Player.readPlayerData(uid);
-
-                                    Toast.makeText(RegisterActivity.this, "Account Created",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(RegisterActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
             }
+
+            if (TextUtils.isEmpty(name)) {
+                Toast.makeText(RegisterActivity.this, "Enter name", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+
+            if (TextUtils.isEmpty(password)) {
+                Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(RegisterActivity.this, task -> {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String uid = user != null ? user.getUid() : "";
+
+                            Player.init(uid, name, email, "Player");
+                            Player.init("","","","AI");
+
+                            ArrayList<Card> cards = new ArrayList<>(Arrays.asList(Deck.CARDS).subList(0, 4));
+                            Player.setCards(cards);
+
+                            Player.save(uid);
+                            Player.readPlayerData(uid);
+
+                            Toast.makeText(RegisterActivity.this, "Account Created",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
     }
 }

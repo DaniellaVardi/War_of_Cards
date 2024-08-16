@@ -20,6 +20,7 @@ public class MenuActivity extends AppCompatActivity {
     FirebaseUser user;
     Button logout_BTN;
     TextView user_details;
+    Player player;
 
     private MaterialButton onePlayer_BTN;
     private MaterialButton twoPlayer_BTN;
@@ -32,6 +33,15 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         findViews();
+
+//        if (player == null) {
+//            Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
+//        else{
+//            user_details.setText(Player.getInstancePlayer());
+//        }
 
         if (user == null) {
             Intent intent = new Intent(MenuActivity.this, LoginActivity.class);

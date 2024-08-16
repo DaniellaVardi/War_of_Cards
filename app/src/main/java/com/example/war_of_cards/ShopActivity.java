@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.war_of_cards.Database.DatabaseService;
 import com.example.war_of_cards.Logic.CardAdapter;
 import com.example.war_of_cards.Model.Card;
 import com.example.war_of_cards.Model.Player;
@@ -28,6 +29,7 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
     private List<Card> cardList;
     private MaterialButton purchaseButton;
     private MaterialButton backButton;
+    private DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,10 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
         setContentView(R.layout.activity_shop);
 
         shop = new Shop();
-        player = Player.getInstancePlayer();// Hardcoded player initialization for testing
+        player = Player.getInstancePlayer(); // Hardcoded player initialization for testing
 
-        player.setCoins(6000);
+        // Initialize DatabaseService with a reference to the players node
+        databaseService = new DatabaseService("Players");
 
         amountTextView = findViewById(R.id.shop_LBL_amount);
         recyclerView = findViewById(R.id.shop_RV_items);
@@ -62,11 +65,17 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
         purchaseButton.setOnClickListener(v -> {
             int totalCost = 0;
             List<Card> cardsToBuy = new ArrayList<>();
+            boolean purchaseSuccess = false;
 
+            // Iterate through the card list to process selected cards
             for (Card card : cardList) {
                 if (card.isSelected()) {
-                    totalCost += card.getValue();
-                    if (!player.getCards().contains(card)) {
+                    // Check if the player already owns the card based on card id
+                    boolean alreadyOwnsCard = player.getCards().stream()
+                            .anyMatch(existingCard -> existingCard.getId().equals(card.getId()));
+
+                    if (!alreadyOwnsCard) {
+                        totalCost += card.getValue();
                         cardsToBuy.add(card);
                     } else {
                         Toast.makeText(ShopActivity.this, "Already have the card: " + card.getName(), Toast.LENGTH_SHORT).show();
@@ -74,23 +83,28 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
                 }
             }
 
+            // Calculate the cost and update coins
             if (totalCost > player.getCoins()) {
                 Toast.makeText(ShopActivity.this, "Not enough coins to complete the purchase.", Toast.LENGTH_SHORT).show();
-            } else {
-                for (Card card : cardsToBuy) {
-                    if (shop.purchaseCard(player, card)) {
-                        Toast.makeText(ShopActivity.this, "Card purchased: " + card.getName(), Toast.LENGTH_SHORT).show();
-                        // Navigate back to the menu
-                        Intent intent = new Intent(ShopActivity.this, MenuActivity.class);
-                        startActivity(intent);
-                        finish(); // Close ShopActivity
-                    }
-                }
-                cardAdapter.notifyDataSetChanged();
-                amountTextView.setText("Amount: " + player.getCoins()); // Update player's amount
+            } else if (!cardsToBuy.isEmpty()) {
+                // Deduct the cost from player's coins and update card list
+                player.setCoins(player.getCoins() - totalCost);
 
+                // Add purchased cards to player's card list
+                player.getCards().addAll(cardsToBuy);
+
+                // Save updated player data to the database
+                savePlayerData();
+                purchaseSuccess = true;
             }
 
+            if (purchaseSuccess) {
+                Toast.makeText(ShopActivity.this, "Purchase successful!", Toast.LENGTH_SHORT).show();
+                // Navigate back to the menu
+                Intent intent = new Intent(ShopActivity.this, MenuActivity.class);
+                startActivity(intent);
+                finish(); // Close ShopActivity
+            }
         });
 
         backButton.setOnClickListener(v -> {
@@ -105,6 +119,11 @@ public class ShopActivity extends AppCompatActivity implements CardAdapter.OnCar
         for (Card card : cardList) {
             card.setSelected(false); // Clear selection state
         }
+    }
+
+    private void savePlayerData() {
+        // Save player cards and coins to the database
+        databaseService.save(player, player.getUid());
     }
 
     @Override

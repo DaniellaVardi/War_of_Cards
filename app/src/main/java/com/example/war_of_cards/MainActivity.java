@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.war_of_cards.Audio.SoundManager;
+import com.example.war_of_cards.Database.DatabaseService;
 import com.example.war_of_cards.Model.Card;
 import com.example.war_of_cards.Model.Game;
 import com.example.war_of_cards.Model.Player;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean[] boolImage = {false, false, false};
 
     private Game game;
+    Player player1;
     private int chosenCard = -1;
     private boolean isChosen = false;
     private int roundCounter = 0;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("Player","player12345 after main:"+Player.getInstancePlayer().toString());
 
-        Player player1 = Player.getInstancePlayer();
+        player1 = Player.getInstancePlayer();
         game = new Game();
 
 //        Player player1 = (Player) getIntent().getSerializableExtra("player1");
@@ -189,10 +191,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endGame() {
+        Log.d("SCORE", "player1 coins before add score:"+ player1.getCoins());
+        player1.addCoins(game.getPlayer1Score());
+        Log.d("SCORE", "player1 score end game:"+ player1.getCoins());
+        // Save the updated player data to the database
+        DatabaseService dbService = new DatabaseService("Players");
+        dbService.save(player1, player1.getUid());
+
         soundManager.stopLooping(); // Stop the looping game start sound
         Intent resultIntent = new Intent(this, ResultActivity.class);
-        resultIntent.putExtra("player1Score", game.getPlayer1Score());
-        resultIntent.putExtra("player2Score", game.getPlayer2Score());
+        resultIntent.putExtra("game", game);
         startActivity(resultIntent);
     }
 

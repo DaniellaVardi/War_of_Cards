@@ -9,7 +9,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Player implements Serializable {
@@ -106,7 +105,7 @@ public class Player implements Serializable {
         cards = cs;
     }
 
-    public List<Card> getSelectedCards() {
+    public ArrayList<Card> getSelectedCards() {
         return selectedCards;
     }
 
@@ -125,6 +124,8 @@ public class Player implements Serializable {
 
     public void addCoins(int amount) {
         this.coins += amount;
+        setCoins(coins);
+        Log.d("Coins", "coins:" + coins);
     }
 
     public void addSelectedCard(Card card) {

@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name:"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_IMG_logo"
@@ -30,6 +31,7 @@
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_IMG_logo"
@@ -42,6 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email:"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_name_label"
@@ -52,6 +55,7 @@
         android:id="@+id/profile_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_name"
@@ -64,6 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Coins:"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_email_label"
@@ -74,6 +79,7 @@
         android:id="@+id/profile_coins"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_email"
@@ -86,6 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="My Cards:"
+        android:fontFamily="@font/new_rocket"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_below="@id/profile_coins_label"
@@ -94,12 +101,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profile_RV_items"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_card_shop"
+        android:layout_width="372dp"
+        android:layout_height="288dp"
+        android:layout_below="@id/profile_cards_label"
         android:layout_marginBottom="16dp"
-        android:layout_below="@id/profile_cards_label"/>
-
+        tools:listitem="@layout/item_card_shop" />
 
     <Button
         android:id="@+id/back_BTN"
@@ -111,6 +117,7 @@
         android:backgroundTint="@color/gold"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:layout_below="@+id/profile_RV_items"/>
 
 </RelativeLayout>

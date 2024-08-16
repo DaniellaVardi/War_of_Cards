@@ -2,11 +2,13 @@ package com.example.war_of_cards.Model;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class Game {
+public class Game implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Player player1;
     private Player player2;
@@ -25,9 +27,6 @@ public class Game {
 
     public void setPlayer1(Player player1) {
         this.player1 = player1;
-
-        Log.d("Player","player1111:"+player1.toString());
-
 
         // Ensure player1 has selected cards if they were not set already
         if (this.player1.getSelectedCards().isEmpty() && this.player1.getCards().size() >= 3) {
@@ -77,12 +76,12 @@ public class Game {
         }
 
         player2.getSelectedCards().remove(card2);
-        player1.setCoins(player1Score);
-        player2.setCoins(player2Score);
+        player2.setCoins(player2.getCoins() + player2Score);
+
         Log.d("Player","player1:"+player1.toString());
         Log.d("Player","player2:"+player2.toString());
-        Log.d("Coins", "player1 coins = " + player1.getCoins());
-        Log.d("Coins", "player2 coins = " + player2.getCoins());
+        Log.d("SCORE", "player1 score = " + player1Score);
+        Log.d("SCORE", "player2 score = " + player2Score);
 
         return card2;
     }
