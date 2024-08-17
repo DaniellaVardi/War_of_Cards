@@ -15,7 +15,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class DatabaseService {
 
@@ -25,15 +24,13 @@ public class DatabaseService {
         this.ref = FirebaseDatabase.getInstance().getReference(name);
     }
 
-
     public void save(Object obj, String id) {
         ref.child(id).setValue(obj)
                 .addOnSuccessListener(aVoid -> Log.d("Player", "Data saved successfully"))
                 .addOnFailureListener(e -> Log.d("Player", "Failed to save data: " + e.getMessage()));
-
     }
 
-    public void updatePlayer(String uid, final DataLoadCallback callback ){
+    public void updatePlayer(String uid, final DataLoadCallback callback) {
         fetchData(ref.child(uid), snapshot -> {
             Player player = snapshot.getValue(Player.class);
             if (player != null) {
@@ -46,7 +43,6 @@ public class DatabaseService {
             callback.onDataLoadFailed(error.getMessage());
         });
     }
-
 
     private void fetchData(@NonNull DatabaseReference reference, DataLoadAction onDataLoaded, ErrorAction onError) {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -63,30 +59,18 @@ public class DatabaseService {
     }
 
     public void loadPlayer(FirebaseUser currentUser) {
-        if(Player.getInstancePlayer() == null){
-            Player.init(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail(), "Player");
-            Player.init("","","","AI");
-
-        }
-        Player player = Player.getInstancePlayer();
-        ref.child(player.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        String userId = currentUser.getUid();
+        ref.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<HashMap<String, Object>> cardsData = (ArrayList<HashMap<String, Object>>) snapshot.child("cards").getValue();
-                ArrayList<Card> cards = new ArrayList<>();
-
-                for (HashMap<String, Object> cardMap : cardsData) {
-                    Card card = new Card();
-                    card.setImageResource(((Number) cardMap.get("imageResource")).intValue());
-                    card.setName((String) cardMap.get("name"));
-                    card.setPower(((Number) cardMap.get("power")).intValue());
-                    card.setSelected((Boolean) cardMap.get("selected"));
-                    card.setValue(((Number) cardMap.get("value")).intValue());
-                    cards.add(card);
+                Player player = snapshot.getValue(Player.class);
+                if (player != null) {
+                    player.setUid(userId); // Set the UID to ensure the player object is properly identified
+                    Player.setInstance(player); // Set the loaded player as the current instance
+                    Log.d("Player", "Loaded player: " + player.toString());
+                } else {
+                    Log.d("Player", "Player data is null");
                 }
-
-                Player.setCards(cards);
-                System.out.println("Player: " + Player.getInstancePlayer().toString());
             }
 
             @Override
@@ -95,8 +79,6 @@ public class DatabaseService {
             }
         });
     }
-
-
 
     public interface DataLoadCallback {
         void onDataLoaded(Player player);
@@ -110,5 +92,4 @@ public class DatabaseService {
     private interface ErrorAction {
         void onError(DatabaseError error);
     }
-
 }

@@ -53,7 +53,7 @@ public class SoundManager {
     }
 
     public void playSound(int soundId) {
-        soundPool.play(soundId, 3, 3, 1, 0, 1);
+        soundPool.play(soundId, 3f, 3f, 1, 0, 1);
     }
 
     public void stopLooping() {

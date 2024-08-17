@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextInputEditText editTextEmail, editTextPassword, editTextName;
+    TextInputEditText editTextEmail, editTextPassword;
     Button buttonLogin;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -29,10 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     DatabaseService dbs;
 
-
     @Override
     public void onStart() {
         super.onStart();
+        currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
             startActivity(intent);
@@ -50,10 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
-        editTextName = findViewById(R.id.name);
         buttonLogin = findViewById(R.id.login_BTN);
         progressBar = findViewById(R.id.progressBar);
         textView = findViewById(R.id.registerNow);
@@ -66,20 +63,11 @@ public class LoginActivity extends AppCompatActivity {
 
         buttonLogin.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
-            String email, password, name;
-            email = String.valueOf(editTextEmail.getText());
-            password = String.valueOf(editTextPassword.getText());
-            name = String.valueOf(editTextName.getText());
-
-            Log.d("LOGIN", "email:"+ email+"password:" + password);
+            String email = String.valueOf(editTextEmail.getText());
+            String password = String.valueOf(editTextPassword.getText());
 
             if (TextUtils.isEmpty(email)) {
                 Toast.makeText(LoginActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (TextUtils.isEmpty(name)) {
-                Toast.makeText(LoginActivity.this, "Enter name", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -87,31 +75,30 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
-                        Log.d("LOGIN","competed login" + task.isSuccessful());
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             currentUser = mAuth.getCurrentUser();
                             assert currentUser != null;
-                            System.out.println("FIREBASESSSSSSS: "+currentUser.getUid());
-//                            Player.init(currentUser.getUid(), name, email, "Player");
-//                            Player.init("","","","AI");
+                            Log.d("LOGIN", "Firebase UID: " + currentUser.getUid());
+
+                            // Clear previous player data
+                            Player.clearInstance();
+
                             dbs.loadPlayer(currentUser);
 
-                            Toast.makeText(LoginActivity.this, "Login Successful",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
                             startActivity(intent);
                             finish();
 
                         } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             Log.d("LOGIN", String.valueOf(task.getException()));
                         }
                     });
-
         });
     }
 }

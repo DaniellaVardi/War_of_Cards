@@ -40,6 +40,7 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
         setup_BTN_confirm.setEnabled(false); // Disable button initially
 
         player = Player.getInstancePlayer(); // Initialize Player
+        Log.d("PLAYERRRR", "player details:" + player.toString());
 
         // Clear selected cards when entering GameSetupActivity
         clearSelectedCards();
@@ -75,7 +76,7 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
     }
 
     private void clearSelectedCards() {
-        if (player.getSelectedCards() != null) {
+        if (player.getSelectedCards() != null && player != null) {
             player.getSelectedCards().clear(); // Clear the list
         }
     }

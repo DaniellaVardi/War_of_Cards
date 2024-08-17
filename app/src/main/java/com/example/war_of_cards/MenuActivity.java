@@ -32,16 +32,9 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        findViews();
+        player = Player.getInstancePlayer(); // Initialize Player
 
-//        if (player == null) {
-//            Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//        else{
-//            user_details.setText(Player.getInstancePlayer());
-//        }
+        findViews();
 
         if (user == null) {
             Intent intent = new Intent(MenuActivity.this, LoginActivity.class);

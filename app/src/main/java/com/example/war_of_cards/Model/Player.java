@@ -1,9 +1,7 @@
 package com.example.war_of_cards.Model;
 
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.example.war_of_cards.Database.DatabaseService;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,7 +21,7 @@ public class Player implements Serializable {
     private static Player instancePlayer = null;
     private static Player instanceAI = null;
 
-    private Player(String uid,String name, String email) {
+    private Player(String uid, String name, String email) {
         this.uid = uid;
         this.name = name;
         this.email = email;
@@ -41,23 +39,29 @@ public class Player implements Serializable {
     }
 
     public static void init(String uid, String name, String email, String type) {
-        if(Objects.equals(type, "Player")) {
+        if (Objects.equals(type, "Player")) {
             instancePlayer = new Player(uid, name, email);
-            Log.d("Player","jhfhff1:"+Player.getInstancePlayer().toString());
-
-        }else {
+            Log.d("Player", "Initialized Player: " + Player.getInstancePlayer().toString());
+        } else {
             instanceAI = new Player();
-            Log.d("Player","jhfhff2:"+Player.getInstancePlayer().toString());
-
-
+            Log.d("Player", "Initialized AI Player: " + Player.getInstancePlayer().toString());
         }
     }
 
     public static Player getInstancePlayerAI() {
         return instanceAI;
     }
+
+    public static void clearInstance() {
+        instancePlayer = null;
+    }
+
     public static Player getInstancePlayer() {
         return instancePlayer;
+    }
+
+    public static void setInstance(Player player) {
+        instancePlayer = player;
     }
 
     public String getUid() {
@@ -125,7 +129,7 @@ public class Player implements Serializable {
     public void addCoins(int amount) {
         this.coins += amount;
         setCoins(coins);
-        Log.d("Coins", "coins:" + coins);
+        Log.d("Player", "coins: " + coins);
     }
 
     public void addSelectedCard(Card card) {
@@ -145,25 +149,23 @@ public class Player implements Serializable {
     }
 
     public static void save(String id) {
-        Log.d("Player", "loadToDataBase: " + id);
+        Log.d("Player", "Saving Player: " + id);
         if (dbs != null) dbs.save(instancePlayer, id);
         else Log.e("Player", "DatabaseService not initialized");
-
     }
 
     public static void readPlayerData(String uid) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Players").child(uid);
+        DatabaseService dbs = new DatabaseService("Players");
+        dbs.updatePlayer(uid, new DatabaseService.DataLoadCallback() {
+            @Override
+            public void onDataLoaded(Player player) {
+                instancePlayer = player;
+                Log.d("Player", "Player data loaded: " + player.toString());
+            }
 
-        ref.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Player player = task.getResult().getValue(Player.class);
-                if (player != null) {
-                    Log.d("Player", "Player data: " + player.toString());
-                } else {
-                    Log.d("Player", "Player data is null");
-                }
-            } else {
-                Log.d("Player", "Failed to read data: " + task.getException());
+            @Override
+            public void onDataLoadFailed(String error) {
+                Log.e("Player", "Failed to load player data: " + error);
             }
         });
     }
@@ -182,18 +184,20 @@ public class Player implements Serializable {
     }
 
     public void updateFromDB() {
-        dbs.updatePlayer(uid, new DatabaseService.DataLoadCallback() {
+        if (dbs != null) {
+            dbs.updatePlayer(uid, new DatabaseService.DataLoadCallback() {
+                @Override
+                public void onDataLoaded(Player player) {
+                    instancePlayer = player;
+                }
 
-            @Override
-            public void onDataLoaded(Player player) {
-                instancePlayer = player;
-            }
-
-            @Override
-            public void onDataLoadFailed(String error) {
-                Log.d("Player", "Failed update player !");
-            }
-
-        });
+                @Override
+                public void onDataLoadFailed(String error) {
+                    Log.d("Player", "Failed to update player from DB: " + error);
+                }
+            });
+        } else {
+            Log.e("Player", "DatabaseService not initialized");
+        }
     }
 }
