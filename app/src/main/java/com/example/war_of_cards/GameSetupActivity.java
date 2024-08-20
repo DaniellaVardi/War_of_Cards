@@ -40,7 +40,15 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
         setup_BTN_confirm.setEnabled(false); // Disable button initially
 
         player = Player.getInstancePlayer(); // Initialize Player
-        Log.d("PLAYERRRR", "player details:" + player.toString());
+
+        if (player == null) {
+            Log.e("GameSetupActivity", "Player instance is null! Please initialize the player properly.");
+            Toast.makeText(this, "Error: Player instance is not initialized.", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity to avoid further issues
+            return;
+        }
+
+        Log.d("Player", "player details:" + player.toString());
 
         // Clear selected cards when entering GameSetupActivity
         clearSelectedCards();
@@ -76,7 +84,7 @@ public class GameSetupActivity extends AppCompatActivity implements CardAdapter.
     }
 
     private void clearSelectedCards() {
-        if (player.getSelectedCards() != null && player != null) {
+        if (player != null && player.getSelectedCards() != null) {
             player.getSelectedCards().clear(); // Clear the list
         }
     }

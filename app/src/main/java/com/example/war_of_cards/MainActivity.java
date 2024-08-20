@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
         player2_LBL.setText(game.getPlayer2().getName());
 
         // Play the game start sound (looping)
-        soundManager.playLooping(SoundManager.SOUND_GAME_START);
+        soundManager.playLooping(SoundManager.SOUND_GAME_START, 0.3f, 0.3f);
 
         // Play the round 1 sound
-        soundManager.playSound(SoundManager.SOUND_ROUND_1);
+        soundManager.playSound(SoundManager.SOUND_ROUND_1, 1f, 1f);
 
         player1_IMG_card.setOnClickListener(v -> playRound());
 
@@ -177,11 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Play round sound based on the round counter
         if (roundCounter == 0) {
-            soundManager.playSound(SoundManager.SOUND_ROUND_1);
+            soundManager.playSound(SoundManager.SOUND_ROUND_2, 0.5f, 0.5f);
         } else if (roundCounter == 1) {
-            soundManager.playSound(SoundManager.SOUND_ROUND_2);
-        } else if (roundCounter == 2) {
-            soundManager.playSound(SoundManager.SOUND_ROUND_3);
+            soundManager.playSound(SoundManager.SOUND_ROUND_3, 0.5f, 0.5f);
         }
 
         roundCounter++;

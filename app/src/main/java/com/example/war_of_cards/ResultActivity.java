@@ -36,10 +36,10 @@ public class ResultActivity extends AppCompatActivity {
 
             if (player1Score > player2Score) {
                 resultTextView.setText("VICTORY !");
-                soundManager.playSound(SoundManager.SOUND_VICTORY);
+                soundManager.playSound(SoundManager.SOUND_VICTORY, 0.6f, 0.6f);
             } else if (player2Score > player1Score) {
                 resultTextView.setText("YOU LOSE !");
-                soundManager.playSound(SoundManager.SOUND_LOSE);
+                soundManager.playSound(SoundManager.SOUND_LOSE, 0.6f, 0.6f);
             } else {
                 resultTextView.setText("The game is a draw!");
             }

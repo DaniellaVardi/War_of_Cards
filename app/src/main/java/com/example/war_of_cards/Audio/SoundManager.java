@@ -2,8 +2,6 @@ package com.example.war_of_cards.Audio;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Build;
 
 import com.example.war_of_cards.R;
 
@@ -16,44 +14,31 @@ public class SoundManager {
     public static final int SOUND_LOSE = R.raw.lose_soud;
     public static final int SOUND_VICTORY = R.raw.victory_sound;
 
-
     private Context context;
     private MediaPlayer mediaPlayer;
-    private SoundPool soundPool;
-    private int soundGameStart;
-    private int soundRound1;
-    private int soundRound2;
-    private int soundRound3;
-    private int soundLose;
-    private int soundVictory;
-
+    private MediaPlayer mediaPlayerShort;
 
     public SoundManager(Context context) {
         this.context = context;
-
-        soundPool = new SoundPool.Builder().setMaxStreams(6).build();
-
-        soundGameStart = soundPool.load(context, SOUND_GAME_START, 1);
-        soundRound1 = soundPool.load(context, SOUND_ROUND_1, 1);
-        soundRound2 = soundPool.load(context, SOUND_ROUND_2, 1);
-        soundRound3 = soundPool.load(context, SOUND_ROUND_3, 1);
-        soundLose = soundPool.load(context, SOUND_LOSE, 1);
-        soundVictory = soundPool.load(context, SOUND_VICTORY, 1);
-
-        mediaPlayer = MediaPlayer.create(context, SOUND_GAME_START);
     }
 
-    public void playLooping(int soundId) {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-        }
+    public void playLooping(int soundId, float lVol, float rVol) {
+        releaseMediaPlayer(); // Release the previous instance if any
         mediaPlayer = MediaPlayer.create(context, soundId);
+        mediaPlayer.setVolume(lVol, rVol);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
     }
 
-    public void playSound(int soundId) {
-        soundPool.play(soundId, 3f, 3f, 1, 0, 1);
+    public void playSound(int soundId,float lVol, float rVol) {
+        releaseMediaPlayerShort(); // Release the previous instance if any
+        mediaPlayerShort = MediaPlayer.create(context, soundId);
+        mediaPlayerShort.setVolume(lVol, rVol);
+        mediaPlayerShort.setLooping(false);
+        mediaPlayerShort.start();
+
+        // Release the media player once the sound has finished playing
+        mediaPlayerShort.setOnCompletionListener(mp -> releaseMediaPlayerShort());
     }
 
     public void stopLooping() {
@@ -65,10 +50,21 @@ public class SoundManager {
     }
 
     public void release() {
-        if (soundPool != null) {
-            soundPool.release();
-            soundPool = null;
+        releaseMediaPlayer();
+        releaseMediaPlayerShort();
+    }
+
+    private void releaseMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
-        stopLooping();
+    }
+
+    private void releaseMediaPlayerShort() {
+        if (mediaPlayerShort != null) {
+            mediaPlayerShort.release();
+            mediaPlayerShort = null;
+        }
     }
 }

@@ -97,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String uid = user != null ? user.getUid() : "";
 
                             Player.init(uid, name, email, "Player");
-                            Player.init("","","","AI");
+                            Player.init("AI","","","AI");
 
                             ArrayList<Card> cards = new ArrayList<>(Arrays.asList(Deck.CARDS).subList(0, 4));
                             Player.setCards(cards);

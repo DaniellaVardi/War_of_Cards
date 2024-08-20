@@ -28,16 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     DatabaseService dbs;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

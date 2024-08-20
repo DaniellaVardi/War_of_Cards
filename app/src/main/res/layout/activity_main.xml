@@ -20,6 +20,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center"/>
 
+
     <FrameLayout
         android:id="@+id/framePlayer2"
         android:layout_width="100dp"

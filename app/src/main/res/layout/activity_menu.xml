@@ -61,6 +61,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/gold"
         android:layout_gravity="center"
+        android:enabled="false"
         android:clickable="true" />
 
     <com.google.android.material.button.MaterialButton
